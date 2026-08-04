@@ -2,6 +2,8 @@
 # same-precedence right operand still needs parentheses.
 NON_ASSOCIATIVE = "-/"
 
+PRECEDENCE: dict[str, int] = {"+": 0, "-": 0, "*": 1, "/": 1}
+
 
 def infix(postfix: str) -> str:
     """Convert postfix to infix, using the fewest parentheses needed.
@@ -9,26 +11,25 @@ def infix(postfix: str) -> str:
     Returns "invalid" (or "format invalid") if the input isn't a valid
     postfix expression.
     """
-    weight: dict[str, int] = {"+": 0, "-": 0, "*": 1, "/": 1}
     stack: list[list[str]] = []
 
     for char in postfix:
         if char == " ":
             continue
-        elif char in weight:
+        elif char in PRECEDENCE:
             if len(stack) < 2:
                 return "format invalid"
             right = stack.pop()
             left = stack.pop()
             if len(right) > 1 and (
-                weight[right[1]] < weight[char]
-                or (weight[right[1]] == weight[char] and char in NON_ASSOCIATIVE)
+                PRECEDENCE[right[1]] < PRECEDENCE[char]
+                or (PRECEDENCE[right[1]] == PRECEDENCE[char] and char in NON_ASSOCIATIVE)
             ):
                 right = f"({right[0]})"
             else:
                 right = right[0]
 
-            if len(left) > 1 and weight[left[1]] < weight[char]:
+            if len(left) > 1 and PRECEDENCE[left[1]] < PRECEDENCE[char]:
                 left = f"({left[0]})"
             else:
                 left = left[0]
