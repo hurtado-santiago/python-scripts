@@ -1,11 +1,11 @@
-def infix(postfix):
+def infix(postfix: str) -> str:
     """Convert postfix to infix, using the fewest parentheses needed.
 
     Returns "invalid" (or "format invalid") if the input isn't a valid
     postfix expression.
     """
-    weight = {"+": 0, "-": 0, "*": 1, "/": 1}
-    pile = []
+    weight: dict[str, int] = {"+": 0, "-": 0, "*": 1, "/": 1}
+    pile: list[list[str]] = []
 
     for char in postfix:
         if char == " ":
