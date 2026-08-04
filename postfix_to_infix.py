@@ -15,7 +15,10 @@ def infix(postfix):
                 return "format invalid"
             aux2 = pile.pop()
             aux1 = pile.pop()
-            if len(aux2) > 1 and ((weight[aux2[1]] <= weight[char])):
+            if len(aux2) > 1 and (
+                weight[aux2[1]] < weight[char]
+                or (weight[aux2[1]] == weight[char] and char in "-/")
+            ):
                 aux2 = f"({aux2[0]})"
             else:
                 aux2 = aux2[0]
