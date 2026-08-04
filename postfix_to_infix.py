@@ -1,4 +1,9 @@
 def infix(postfix):
+    """Convert postfix to infix, using the fewest parentheses needed.
+
+    Returns "invalid" (or "format invalid") if the input isn't a valid
+    postfix expression.
+    """
     weight = {"+": 0, "-": 0, "*": 1, "/": 1}
     pile = []
 
