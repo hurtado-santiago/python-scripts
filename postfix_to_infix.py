@@ -1,3 +1,8 @@
+# Operators where swapping evaluation order changes the result, so a
+# same-precedence right operand still needs parentheses.
+NON_ASSOCIATIVE = "-/"
+
+
 def infix(postfix: str) -> str:
     """Convert postfix to infix, using the fewest parentheses needed.
 
@@ -10,14 +15,14 @@ def infix(postfix: str) -> str:
     for char in postfix:
         if char == " ":
             continue
-        elif char in weight.keys():
+        elif char in weight:
             if len(stack) < 2:
                 return "format invalid"
             right = stack.pop()
             left = stack.pop()
             if len(right) > 1 and (
                 weight[right[1]] < weight[char]
-                or (weight[right[1]] == weight[char] and char in "-/")
+                or (weight[right[1]] == weight[char] and char in NON_ASSOCIATIVE)
             ):
                 right = f"({right[0]})"
             else:
@@ -39,10 +44,10 @@ def infix(postfix: str) -> str:
     return stack.pop()[0]
 
 
-# tests = ['ab+c*', 'abc*+', 'abc/+*', 'ab+c d-*', 'abc/+', 'a', 'd*', '+-', '/p', 'ab^c d-', 'abc++']
-tests = ["abc**"]
+if __name__ == "__main__":
+    # tests = ['ab+c*', 'abc*+', 'abc/+*', 'ab+c d-*', 'abc/+', 'a', 'd*', '+-', '/p', 'ab^c d-', 'abc++']
+    tests = ["abc**"]
 
-
-for expr in tests:
-    result = infix(expr)
-    print(f"{expr:10} ==> {result}")
+    for expr in tests:
+        result = infix(expr)
+        print(f"{expr:10} ==> {result}")
