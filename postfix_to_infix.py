@@ -5,44 +5,44 @@ def infix(postfix: str) -> str:
     postfix expression.
     """
     weight: dict[str, int] = {"+": 0, "-": 0, "*": 1, "/": 1}
-    pile: list[list[str]] = []
+    stack: list[list[str]] = []
 
     for char in postfix:
         if char == " ":
             continue
         elif char in weight.keys():
-            if len(pile) < 2:
+            if len(stack) < 2:
                 return "format invalid"
-            aux2 = pile.pop()
-            aux1 = pile.pop()
-            if len(aux2) > 1 and (
-                weight[aux2[1]] < weight[char]
-                or (weight[aux2[1]] == weight[char] and char in "-/")
+            right = stack.pop()
+            left = stack.pop()
+            if len(right) > 1 and (
+                weight[right[1]] < weight[char]
+                or (weight[right[1]] == weight[char] and char in "-/")
             ):
-                aux2 = f"({aux2[0]})"
+                right = f"({right[0]})"
             else:
-                aux2 = aux2[0]
+                right = right[0]
 
-            if len(aux1) > 1 and weight[aux1[1]] < weight[char]:
-                aux1 = f"({aux1[0]})"
+            if len(left) > 1 and weight[left[1]] < weight[char]:
+                left = f"({left[0]})"
             else:
-                aux1 = aux1[0]
+                left = left[0]
 
-            pile.append([f"{aux1}{char}{aux2}", char])
+            stack.append([f"{left}{char}{right}", char])
 
-        elif (char >= "a" and char <= "z") or (char >= "A" and char <= "Z"):
-            pile.append([char])
+        elif char.isalpha():
+            stack.append([char])
         else:
             return "format invalid"
-    if len(pile) != 1:
+    if len(stack) != 1:
         return "invalid"
-    return pile.pop()[0]
+    return stack.pop()[0]
 
 
 # tests = ['ab+c*', 'abc*+', 'abc/+*', 'ab+c d-*', 'abc/+', 'a', 'd*', '+-', '/p', 'ab^c d-', 'abc++']
 tests = ["abc**"]
 
 
-for x in tests:
-    result = infix(x)
-    print(f"{x:10} ==> {result}")
+for expr in tests:
+    result = infix(expr)
+    print(f"{expr:10} ==> {result}")
